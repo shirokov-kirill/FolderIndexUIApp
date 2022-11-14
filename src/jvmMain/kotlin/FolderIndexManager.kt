@@ -13,7 +13,7 @@ class FolderIndexManager {
     var folder by mutableStateOf<String?>(null)
 
     private var lastQuery: String = ""
-    var queried: Map<String, Map<String, Long>> by mutableStateOf(mapOf())
+    var queried: Map<String, Long> by mutableStateOf(mapOf())
 
     private var coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -28,17 +28,14 @@ class FolderIndexManager {
             queried = mapOf()
         } else if(validateQuery(query)){
             lastQuery = query
-            val newQueried = mutableMapOf<String, Map<String, Long>>()
+            val newQueried = mutableMapOf<String, Long>()
             val queriedList = parseQuery(query)
             for(word in queriedList) {
-                val fileToCount = mutableMapOf<String, Long>()
+                var result = 0L
                 for(fileName in index.keys) {
-                    val result = index[fileName]?.get(word)
-                    if(result != null) {
-                        fileToCount[fileName] = result
-                    }
+                    result += index[fileName]?.get(word) ?: 0
                 }
-                newQueried[word] = fileToCount
+                newQueried[word] = result
             }
             queried = newQueried
         }

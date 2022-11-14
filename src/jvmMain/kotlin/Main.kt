@@ -22,12 +22,14 @@ fun App() {
             val indexManager = remember { FolderIndexManager() }
             // uncomment the next line to see the produced Index
             // println(indexManager.index)
+            println(indexManager.queried)
             if(indexManager.folder == null) {
                 inputFolderNameScreen(
                     onSubmitClicked = indexManager::setUpFolder
                 )
             } else {
                 statisticsScreen(
+                    displayData = indexManager.queried,
                     handleSearch = indexManager::search,
                     onBackClicked = indexManager::reset
                 )
